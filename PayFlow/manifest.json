@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Zoho Ticket URL Helper",
+  "version": "1.1.0",
+  "description": "Builds Zoho Bookings URL using zd_ticket_id from CRM ticket URL.",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": [
+    "https://crmplus.zoho.in/*",
+    "https://assist.zohobookings.com/*"
+  ],
+  "action": {
+    "default_title": "Build Zoho Payments URL",
+    "default_popup": "popup.html"
+  }
+}

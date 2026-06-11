@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoho URL Helper</title>
+    <style>
+      :root {
+        --bg: #f7f6f3;
+        --panel: #ffffff;
+        --text: #1f1d1a;
+        --muted: #6e675f;
+        --accent: #05668d;
+        --accent-2: #028090;
+        --danger: #9f2a2a;
+        --success: #126d34;
+        --border: #ded8cf;
+        --input-bg: #fcfbf9;
+      }
+
+      body[data-theme="dark"] {
+        --bg: #121824;
+        --panel: #1b2434;
+        --text: #e8edf8;
+        --muted: #9fb0cb;
+        --accent: #2a9d8f;
+        --accent-2: #277da1;
+        --danger: #ff7676;
+        --success: #7ddf9c;
+        --border: #2a3650;
+        --input-bg: #141d2d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 400px;
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #fffdf8 0%, var(--bg) 60%);
+        color: var(--text);
+      }
+
+      body[data-theme="dark"] {
+        background: radial-gradient(circle at top left, #22324f 0%, var(--bg) 60%);
+      }
+
+      .wrap {
+        padding: 14px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        letter-spacing: 0.2px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .toggle input {
+        margin: 0;
+      }
+
+      .row {
+        margin-top: 12px;
+      }
+
+      .label {
+        margin-bottom: 4px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      #ticketId {
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 0.3px;
+      }
+
+      #output {
+        width: 100%;
+        min-height: 72px;
+        resize: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px;
+        font: 12px/1.4 Menlo, Monaco, Consolas, "Courier New", monospace;
+        color: var(--text);
+        background: var(--input-bg);
+      }
+
+      .settings {
+        margin-top: 12px;
+        border-top: 1px dashed var(--border);
+        padding-top: 12px;
+      }
+
+      .settingsHead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .settingsHead button {
+        flex: initial;
+        font-size: 11px;
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        padding: 4px 8px;
+      }
+
+      .settingsPanel {
+        margin-top: 10px;
+        display: none;
+        gap: 8px;
+      }
+
+      .settingsPanel.show {
+        display: grid;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 12px;
+        background: var(--input-bg);
+        color: var(--text);
+      }
+
+      #extraParams {
+        min-height: 68px;
+        resize: vertical;
+        font: 12px/1.4 Menlo, Monaco, Consolas, "Courier New", monospace;
+      }
+
+      .saveBtn {
+        background: linear-gradient(135deg, #355070, #6d597a);
+      }
+
+      .btns {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      button {
+        flex: 1;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      #openBtn {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      }
+
+      #copyBtn {
+        background: linear-gradient(135deg, #2f4858, #33658a);
+      }
+
+      #status {
+        margin-top: 8px;
+        min-height: 18px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      #status.error {
+        color: var(--danger);
+      }
+
+      #status.success {
+        color: var(--success);
+      }
+
+      button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card">
+        <div class="topbar">
+          <h1>Zoho Payments Link Builder</h1>
+          <label class="toggle" for="darkMode">
+            <input id="darkMode" type="checkbox" />
+            Dark mode
+          </label>
+        </div>
+        <p>Reads ticket ID from current CRM URL and builds final assist link.</p>
+
+        <div class="row">
+          <div class="label">Extracted Ticket ID</div>
+          <div id="ticketId">-</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Generated URL</div>
+          <textarea id="output" readonly></textarea>
+        </div>
+
+        <div class="btns">
+          <button id="openBtn" type="button">Open URL</button>
+          <button id="copyBtn" type="button">Copy URL</button>
+        </div>
+
+        <section class="settings">
+          <div class="settingsHead">
+            <div class="label" style="margin: 0">Settings</div>
+            <button id="toggleSettingsBtn" type="button">Show</button>
+          </div>
+          <div id="settingsPanel" class="settingsPanel">
+            <div>
+              <div class="label">Base URL</div>
+              <input id="baseUrl" type="text" placeholder="https://assist.zohobookings.com/#/customer/zohopayments" />
+            </div>
+            <div>
+              <div class="label">bookedFrom</div>
+              <input id="bookedFrom" type="text" placeholder="PayVKYC" />
+            </div>
+            <div>
+              <div class="label">Additional Params (one per line: key=value)</div>
+              <textarea id="extraParams" placeholder="source=crmplus"></textarea>
+            </div>
+            <button id="saveSettingsBtn" class="saveBtn" type="button">Save Settings</button>
+          </div>
+        </section>
+
+        <div id="status"></div>
+      </section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
